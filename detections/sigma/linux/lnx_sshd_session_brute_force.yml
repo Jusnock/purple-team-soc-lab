@@ -1,0 +1,40 @@
+title: Potential SSH Brute Force Attempt via sshd-session
+id: 8d4b3c2a-9f1e-4d87-b210-9c8765432101
+status: production
+description: |
+    Detects multiple failed SSH authentication attempts originating from the same source IP 
+    against modern OpenSSH installations utilizing the 'sshd-session' sub-process architecture 
+    (OpenSSH 9.8+ on modern Linux distributions like Ubuntu 24.04+). 
+    Corresponds to MITRE ATT&CK T1110.001 (Password Guessing).
+references:
+    - https://attack.mitre.org/techniques/T1110/001/
+    - https://attack.mitre.org/techniques/T1021/004/
+author: Purple Team SOC Lab
+date: 2026/10/04
+modified: 2026/10/04
+tags:
+    - attack.credential_access
+    - attack.t1110.001
+    - attack.lateral_movement
+    - attack.t1021.004
+logsource:
+    product: linux
+    service: sshd
+detection:
+    selection:
+        program_name:
+            - 'sshd-session'
+            - 'sshd'
+        message|contains:
+            - 'Failed password for'
+            - 'authentication failure'
+    condition: selection | count(src_ip) by dst_user >= 5
+    timeframe: 1m
+fields:
+    - src_ip
+    - dst_user
+    - program_name
+falsepositives:
+    - Legitimate administrators mistyping passwords repeatedly.
+    - Automated configuration management tools (Ansible, Puppet) with stale credentials.
+level: high

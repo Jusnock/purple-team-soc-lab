@@ -1,0 +1,30 @@
+title: Suspicious LSASS Process Access via ProcessAccess
+id: 5a7e1f4b-7a31-4c12-9def-123456789abc
+status: experimental
+description: Detects suspicious process open calls to lsass.exe indicating credential dumping attempts (e.g. Mimikatz, ProcDump).
+references:
+    - https://attack.mitre.org/techniques/T1003/001/
+author: Purple Team SOC Lab
+date: 2026/09/14
+modified: 2026/09/14
+tags:
+    - attack.credential_access
+    - attack.t1003.001
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: '\lsass.exe'
+        GrantedAccess:
+            - '0x1010'     # PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_VM_READ
+            - '0x1F0FFF'   # PROCESS_ALL_ACCESS
+    filter:
+        SourceImage|endswith:
+            - '\svchost.exe'
+            - '\MsMpEng.exe'
+            - '\csrss.exe'
+    condition: selection and not filter
+falsepositives:
+    - Legitimate endpoint security agents and system utilities
+level: high

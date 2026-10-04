@@ -1,0 +1,27 @@
+<!--
+  Wazuh Custom Rules - Detection Engineering
+  SOC & Purple Team Enterprise Simulation Lab
+  Path on Wazuh Manager: /var/ossec/etc/rules/local_rules.xml
+-->
+
+<group name="local,syslog,sshd,">
+
+  <!--
+    Regla 100010: Detección de Fuerza Bruta para OpenSSH Moderno (sshd-session)
+    Técnica MITRE: T1110.001 (Password Guessing) / T1021.004 (SSH)
+    Motivo: OpenSSH 9.8+ (Ubuntu 24.04+) registra sesiones bajo el proceso 'sshd-session'.
+    La regla estándar 5712 vigila '5710' o '5716' (legacy sshd), por lo que esta regla
+    cierra la brecha de detección correlacionando 5 o más fallos de la regla 5760 en 60s.
+  -->
+  <rule id="100010" level="10" frequency="5" timeframe="60">
+    <if_matched_sid>5760</if_matched_sid>
+    <same_source_ip />
+    <description>sshd-session: Ataque de fuerza bruta detectado desde la misma IP (MITRE T1110.001)</description>
+    <mitre>
+      <id>T1110.001</id>
+      <id>T1021.004</id>
+    </mitre>
+    <group>authentication_failures,pci_dss_10.2.4,pci_dss_10.2.5,gdpr_IV_35.7.d,gdpr_IV_32.2,</group>
+  </rule>
+
+</group>

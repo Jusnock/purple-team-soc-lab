@@ -1,10 +1,10 @@
-# 🛡️ Repositorio de Reglas de Detección (Detection-as-Code)
+# Reglas de Detección (Detection-as-Code)
 
-Este directorio contiene las reglas de detección desarrolladas durante las emulaciones del laboratorio Purple Team.
+Este directorio contiene las reglas de detección desarrolladas durante las emulaciones del laboratorio.
 
 ---
 
-## 📁 Organización del Directorio
+## Organización del Directorio
 
 ```
 detections/
@@ -12,12 +12,12 @@ detections/
 │   ├── windows/              # Reglas para eventos de Sysmon y Security de Windows
 │   └── linux/                # Reglas para Auditd y Syslog de Linux
 └── wazuh/                    # Reglas nativas en XML para Wazuh Manager
-    └── local_rules.xml       # Reglas personalizadas listas para importar
+    └── local_rules.xml       # Reglas personalizadas de correlación
 ```
 
 ---
 
-## 📐 Estándar de Reglas Sigma
+## Estándar de Reglas Sigma
 Cada regla debe mapear:
 1. **Técnica MITRE ATT&CK:** Identificador oficial (ej. `attack.t1003.001`).
 2. **Fuente de Datos (Logsource):** Categoría (`process_creation`, `process_access`, `network_connection`).
